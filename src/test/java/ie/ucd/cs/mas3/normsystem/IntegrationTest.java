@@ -14,6 +14,7 @@ public class IntegrationTest {
 
     private Society scBegin;
     private Society scEnd;
+    private Functions fn;
 
     private void prepareData() {
         String jsonBegin = "{'num_segments': 5, 'num_agents': 20, 'num_evaders': 10, 'collecting_rates': [0.5488135039273248, 0.7151893663724195, 0.6027633760716439, 0.5448831829968969, 0.4236547993389047], 'redistribution_rates': [0.19440830746079796, 0.1317098072068841, 0.2684156368884406, 0.29005380671842657, 0.11541244172545075], 'catch': 2, 'fine_rate': 0.5288949197529045, 'invest_rate': 0.05, 'common_fund': 0.0, 'agents': [{'model': '', 'wealth': 96.98090677467488, 'segment': 4, 'position': 2, 'is_evader': False, 'old_wealth': -1}, {'model': '', 'wealth': 65.31400357979376, 'segment': 3, 'position': 6, 'is_evader': False, 'old_wealth': -1}, {'model': '', 'wealth': 17.090958513604516, 'segment': 0, 'position': 19, 'is_evader': False, 'old_wealth': -1}, {'model': '', 'wealth': 35.815216696952504, 'segment': 1, 'position': 15, 'is_evader': False, 'old_wealth': -1}, {'model': '', 'wealth': 75.06861412184563, 'segment': 4, 'position': 4, 'is_evader': False, 'old_wealth': -1}, {'model': '', 'wealth': 60.78306687154678, 'segment': 2, 'position': 11, 'is_evader': False, 'old_wealth': -1}, {'model': '', 'wealth': 32.50472290083525, 'segment': 0, 'position': 17, 'is_evader': True, 'old_wealth': -1}, {'model': '', 'wealth': 3.8425426472734725, 'segment': 0, 'position': 20, 'is_evader': True, 'old_wealth': -1}, {'model': '', 'wealth': 63.427405795733506, 'segment': 2, 'position': 9, 'is_evader': True, 'old_wealth': -1}, {'model': '', 'wealth': 95.89492686245204, 'segment': 4, 'position': 3, 'is_evader': False, 'old_wealth': -1}, {'model': '', 'wealth': 65.27903170054908, 'segment': 3, 'position': 7, 'is_evader': True, 'old_wealth': -1}, {'model': '', 'wealth': 63.50588736035638, 'segment': 3, 'position': 8, 'is_evader': True, 'old_wealth': -1}, {'model': '', 'wealth': 99.52995676778876, 'segment': 4, 'position': 1, 'is_evader': True, 'old_wealth': -1}, {'model': '', 'wealth': 58.18503294385343, 'segment': 2, 'position': 12, 'is_evader': True, 'old_wealth': -1}, {'model': '', 'wealth': 41.43685882263688, 'segment': 1, 'position': 14, 'is_evader': True, 'old_wealth': -1}, {'model': '', 'wealth': 47.46975022884129, 'segment': 1, 'position': 13, 'is_evader': False, 'old_wealth': -1}, {'model': '', 'wealth': 62.351010113186824, 'segment': 2, 'position': 10, 'is_evader': False, 'old_wealth': -1}, {'model': '', 'wealth': 33.800761483889175, 'segment': 1, 'position': 16, 'is_evader': True, 'old_wealth': -1}, {'model': '', 'wealth': 67.47523222590208, 'segment': 3, 'position': 5, 'is_evader': True, 'old_wealth': -1}, {'model': '', 'wealth': 31.720174206929606, 'segment': 0, 'position': 18, 'is_evader': False, 'old_wealth': -1}], 'time_step': 0}";
@@ -26,13 +27,13 @@ public class IntegrationTest {
         scEnd = new Society();
         scEnd.createFromJSON(jsonEnd);
 
-        Functions.length = totalRun;
+        fn = new Functions(totalRun);
     }
 
     @Test
     public void testEqualityComplete() {
         this.prepareData();
-        double returned = Functions.equality_single_path(scBegin);
+        double returned = fn.equality_single_path(scBegin);
         System.out.println(returned);
         assertTrue(scBegin.equals(scEnd));
         assertEquals(0.6582872293204067, returned, 0.0001);
@@ -41,7 +42,7 @@ public class IntegrationTest {
     @Test
     public void testFairnessComplete() {
         this.prepareData();
-        double returned = Functions.fairness_single_path(scBegin);
+        double returned = fn.fairness_single_path(scBegin);
         System.out.println(returned);
         assertTrue(scBegin.equals(scEnd));
         assertEquals(-0.6, returned, 0.0001);
@@ -50,7 +51,7 @@ public class IntegrationTest {
     @Test
     public void testnewWealth_single_pathComplete() {
         this.prepareData();
-        double returned = Functions.newWealth_single_path(scBegin);
+        double returned = fn.newWealth_single_path(scBegin);
         System.out.println(returned);
         assertTrue(scBegin.equals(scEnd));
         assertEquals(0.2814636109355926, returned, 0.0001);
@@ -59,7 +60,7 @@ public class IntegrationTest {
     @Test
     public void testgainedAmount_single_pathComplete() {
         this.prepareData();
-        double returned = Functions.gainedAmount_single_path(scBegin);
+        double returned = fn.gainedAmount_single_path(scBegin);
         System.out.println(returned);
         assertTrue(scBegin.equals(scEnd));
         assertEquals(-0.02299774502636816, returned, 0.0001);
@@ -68,7 +69,7 @@ public class IntegrationTest {
     @Test
     public void testredistributeAmount_single_pathComplete() {
         this.prepareData();
-        double returned = Functions.redistributeAmount_single_path(scBegin);
+        double returned = fn.redistributeAmount_single_path(scBegin);
         System.out.println(returned);
         assertTrue(scBegin.equals(scEnd));
         assertEquals(0.1317098072068841, returned, 0.0001);
@@ -77,7 +78,7 @@ public class IntegrationTest {
     @Test
     public void testcollectAmount_single_pathComplete() {
         this.prepareData();
-        double returned = Functions.collectAmount_single_path(scBegin);
+        double returned = fn.collectAmount_single_path(scBegin);
         System.out.println(returned);
         assertTrue(scBegin.equals(scEnd));
         assertEquals(0.45118649607267525, returned, 0.0001);
@@ -86,7 +87,7 @@ public class IntegrationTest {
     @Test
     public void testaggregation_single_pathComplete() {
         this.prepareData();
-        double returned = Functions.aggregation_single_path(scBegin);
+        double returned = fn.aggregation_single_path(scBegin);
         System.out.println(returned);
         assertTrue(scBegin.equals(scEnd));
         assertEquals(-0.3949916909786685, returned, 0.0001);

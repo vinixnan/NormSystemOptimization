@@ -23,7 +23,7 @@ public class BaseProblemTest extends TestCase {
         /*{'num_agents': 200, 'num_evaders': 10, 'invest_rate': 0.05, 
         'collecting_rates': [0.6478898663769349, 0.7134226815101801, 0.08904775878693694, 0.04600230062452726, 0.6034071555626516], 
         'redistribution_rates': [0.015188582298102793, 0.2716671931032027, 0.03478122550201137, 0.3916746189756817, 0.2866883801210014], 'catch': 0.4058077132698487, 'fine_rate': 0.36355946153811125}gens 0.24268958843571323*/
-        Society sc = new Society(collecting_rate, redistribution_rates, num_agents, num_evaders, fine_rate, invest_rate);
+        Society sc = new Society(collecting_rate, redistribution_rates, num_agents, num_evaders, fine_rate, invest_rate, Double.MAX_VALUE);
         return sc;
     }
 
@@ -34,8 +34,8 @@ public class BaseProblemTest extends TestCase {
             0.23587385934796812, 15.2951836929746, 21.420288087864925, 60.07979084694459, 0.5051886281540852, 55.40775414175477, 73.54301346986657, 62.32684485583187, 86.9597079209005, 6.463258289875762, 85.57718153995056, 63.86670596189635, 91.42683787732592, 61.154678314608745, 41.967632440338576, 99.30554030603918, 28.936482530375507, 66.20574992988337, 7.943875954400359, 99.45824098516304
         };
         sc.setWeath(weaths);
-        Functions.length = 0;
-        double returned = Functions.equality_single_path(sc);
+        Functions fn = new Functions(0);
+        double returned = fn.equality_single_path(sc);
         assertEquals(0.2703962133238431, returned, 0.0001);
         System.out.println(returned);
     }
@@ -49,8 +49,8 @@ public class BaseProblemTest extends TestCase {
         int[] segments = {0, 4, 1, 2, 2, 1, 4, 0, 1, 0, 4, 3, 3, 0, 3, 4, 3, 2, 2, 1};
         sc.setEvaders(evaders);
         sc.setSegments(segments);
-        Functions.length = 0;
-        double returned = Functions.fairness_single_path(sc);
+        Functions fn = new Functions(0);
+        double returned = fn.fairness_single_path(sc);
         assertEquals(-0.6, returned, 0.0001);
         System.out.println(returned);
     }
@@ -62,8 +62,8 @@ public class BaseProblemTest extends TestCase {
         int[] segments = {0, 4, 1, 3, 1, 0, 3, 0, 4, 3, 1, 2, 3, 2, 1, 0, 2, 4, 4, 2};
         sc.setSegments(segments);
         sc.setWeath(weaths);
-        Functions.length = 0;
-        double returned = Functions.newWealth_single_path(sc);
+        Functions fn = new Functions(0);
+        double returned = fn.newWealth_single_path(sc);
         assertEquals(0.35293388741790827, returned, 0.0001);
         System.out.println(returned);
     }

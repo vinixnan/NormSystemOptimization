@@ -67,6 +67,8 @@ public class Society {
      *
      */
     protected int time_step;
+    
+    protected double catche;
 
     /**
      *
@@ -83,8 +85,9 @@ public class Society {
      * @param num_evaders
      * @param fine_rate
      * @param invest_rate
+     * @param catche
      */
-    public Society(double[] collecting_rates, double[] redistribution_rates, int num_agents, int num_evaders, double fine_rate, double invest_rate) {
+    public Society(double[] collecting_rates, double[] redistribution_rates, int num_agents, int num_evaders, double fine_rate, double invest_rate, double catche) {
         this.num_segments = collecting_rates.length;
         this.num_agents = num_agents;
         this.num_evaders = num_evaders;
@@ -94,12 +97,14 @@ public class Society {
         this.fine_rate = fine_rate; // fine to be imposed if an evader in caught
         this.invest_rate = invest_rate;  // interest return to the investment
         this.common_fund = 0.0;//.  # collected taxes for each transition
+        this.catche = catche;
 
         this.agents = new ArrayList<>();
         int aux_qtd = this.num_evaders;
         SecureRandom rnd = new SecureRandom();
         for (int i = 0; i < this.num_agents; i++) {
             Individual ind = new Individual();
+            ind.setCatche(catche);
             if (aux_qtd > 0 && rnd.nextBoolean()) {
                 ind.is_evader = true;
             }
