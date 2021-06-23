@@ -4,6 +4,7 @@ import br.usp.poli.pcs.lti.jmetalhhhelper.core.ParametersforAlgorithm;
 import br.usp.poli.pcs.lti.jmetalhhhelper.core.ParametersforHeuristics;
 import br.usp.poli.pcs.lti.jmetalhhhelper.core.interfaces.LLHInterface;
 import br.usp.poli.pcs.lti.jmetalhhhelper.util.AlgorithmBuilder;
+import ie.ucd.cs.mas3.normsystem.problem.BiObjectiveJmetalOptimizationProblem;
 import ie.ucd.cs.mas3.normsystem.problem.JmetalOptimizationProblem;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -50,27 +51,59 @@ public class Main {
     }
 
     public static void main(String[] args) throws ConfigurationException, JMException, FileNotFoundException {
-        int numAgents = 20;
-        int numEvaders = 2;
+
+        String algConf = "NSGAII";
+        int numAgents = 200;
+        int numEvaders = 10;
         int numSegments = 5;
         double investRate = 0.05;
         int length = 10;
+        int path = 5000;
         int i = 0;
-        JmetalOptimizationProblem problem = new JmetalOptimizationProblem(numAgents, numEvaders, numSegments, investRate, length);
-        String algConf = "MOEADD.default";
+        BiObjectiveJmetalOptimizationProblem problem;
+        int qtdObj = 2;
+
+        String opConf = "SBX.Poly.default";
+
+        if (args.length == 9) {
+            algConf = args[0];
+            numAgents = Integer.parseInt(args[1]);
+            numEvaders = Integer.parseInt(args[2]);
+            numSegments = Integer.parseInt(args[3]);
+            investRate = Double.parseDouble(args[4]);
+            length = Integer.parseInt(args[5]);
+            path = Integer.parseInt(args[6]);
+            qtdObj = Integer.parseInt(args[7]);
+            i = Integer.parseInt(args[8]);
+        }
+        if (qtdObj == 2) {
+            problem = new BiObjectiveJmetalOptimizationProblem(numAgents, numEvaders, numSegments, investRate, length, path);
+        } else {
+            problem = new JmetalOptimizationProblem(numAgents, numEvaders, numSegments, investRate, length, path);
+        }
+
+        algConf += ".default";
+        System.out.println(algConf + " numAgents:" + numAgents + " numEvaders:" + numEvaders + " numSegments:" + numSegments + " investRate:" + investRate + " length:" + length + " path:" + path + " idExecution:" + i + " qtdObj:" + qtdObj);
+
+        String confApendixName = "conf_" + numAgents + "_" + numEvaders + "_" + numSegments + "_" + investRate + "_" + length + "_" + path;
         ParametersforAlgorithm params = new ParametersforAlgorithm(algConf);
         params.setPopulationSize(Main.getPopulationSize(problem.getNumberOfObjectives()));
         params.setArchiveSize(Main.getPopulationSize(problem.getNumberOfObjectives()));
-        params.setMaxIteractions(100);
-        String opConf = "SBX.Poly.default";
+        params.setMaxIteractions(500);
+
         AlgorithmBuilder ab = new AlgorithmBuilder(problem);
         LLHInterface alg = ab.create(params, new ParametersforHeuristics(opConf, problem.getNumberOfVariables()));
-        String dir = "result/" + params.getAlgorithmName() + "/" + problem.getName() + "_obj_" + problem.getNumberOfObjectives() + "/" + params.getMaxIteractions();
+        String dir = "result/" + params.getAlgorithmName() + "/" + problem.getName() + "_obj_" + problem.getNumberOfObjectives() + "/" + confApendixName + "/" + params.getMaxIteractions();
         new File(dir).mkdirs();
         String funFile = dir + "/FUN";
+        String varFile = dir + "/VAR";
         System.out.println("Run " + alg.getClass().getSimpleName());
+        long init = System.currentTimeMillis();
         alg.run();
         List<DoubleSolution> result = alg.getResult();
+        System.out.println("Monte Carlo Sampling");
+        problem.evaluateUsingMonteCarloSampling(result);
+        System.out.println("Remove Non Dominated");
         NonDominatedSolutionListArchive arq = new NonDominatedSolutionListArchive();
         for (Solution s : result) {
             arq.add(s);
@@ -80,8 +113,11 @@ public class Main {
         new SolutionListOutput(archive)
                 .setSeparator("\t")
                 .setFunFileOutputContext(new DefaultFileOutputContext(funFile + "_ALLMIN" + i))
+                .setVarFileOutputContext(new DefaultFileOutputContext(varFile + "_ALLMIN" + i))
                 .print();
 
-        System.out.println("The algorithm have found " + archive.size() + " solutions");
+        long end = System.currentTimeMillis();
+        double total = (((double) (end - init)) / 1000.0) / 60.0;
+        System.out.println("The algorithm have found " + archive.size() + " solutions in " + total + " minutes");
     }
 }
