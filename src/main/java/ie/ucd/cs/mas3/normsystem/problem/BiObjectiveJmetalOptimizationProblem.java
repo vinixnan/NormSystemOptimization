@@ -20,7 +20,6 @@ public class BiObjectiveJmetalOptimizationProblem extends AbstractDoubleProblem 
     protected double investRate;
     protected int length;
     protected Functions fn;
-    protected List<Double> maxValuesToInvert;
     protected int path;
 
     public BiObjectiveJmetalOptimizationProblem(int numAgents, int numEvaders, int numSegments, double investRate, int length, int path) {
@@ -51,10 +50,6 @@ public class BiObjectiveJmetalOptimizationProblem extends AbstractDoubleProblem 
 
         setLowerLimit(lowerLimit);
         setUpperLimit(upperLimit);
-
-        this.maxValuesToInvert = new ArrayList<>();
-        maxValuesToInvert.add(20.0);
-        maxValuesToInvert.add(10.0);
     }
 
     protected Society createSociety(DoubleSolution s) {
@@ -73,12 +68,14 @@ public class BiObjectiveJmetalOptimizationProblem extends AbstractDoubleProblem 
 
     @Override
     public void evaluate(DoubleSolution s) {
-        fn.setLength(length);
         Society sc = this.createSociety(s);
-        s.setObjective(0, maxValuesToInvert.get(0) - fn.equality_single_path(sc));
+        fn.setLength(length);
+        fn.walk(sc);
         fn.setLength(0);
-        s.setObjective(1, maxValuesToInvert.get(1) - fn.fairness_single_path(sc));
-
+        double obj1 = fn.equality_single_path(sc);
+        double obj2 = fn.fairness_single_path(sc);
+        s.setObjective(0, -1 * obj1);
+        s.setObjective(1, -1 * obj2);
     }
 
     public void evaluateUsingMonteCarloSampling(DoubleSolution s) {
@@ -91,14 +88,15 @@ public class BiObjectiveJmetalOptimizationProblem extends AbstractDoubleProblem 
         for (int i = 0; i < societies.size(); i++) {
             Society sc = societies.get(i);
             fn.setLength(length);
-            obj0[i] = fn.equality_single_path(sc);
+            fn.walk(sc);
             fn.setLength(0);
+            obj0[i] = fn.equality_single_path(sc);
             obj1[i] = fn.fairness_single_path(sc);
         }
         double obj0mean = StatUtils.mean(obj0);
         double obj1mean = StatUtils.mean(obj1);
-        s.setObjective(0, obj0mean);
-        s.setObjective(1, obj1mean);
+        s.setObjective(0, -1 * obj0mean);
+        s.setObjective(1, -1 * obj1mean);
     }
     
     public void evaluateUsingMonteCarloSampling(List<DoubleSolution> population){
@@ -107,9 +105,15 @@ public class BiObjectiveJmetalOptimizationProblem extends AbstractDoubleProblem 
         }
     }
 
-    public void revertToMinimization(DoubleSolution s) {
+    public void revertToMaximization(DoubleSolution s) {
         for (int i = 0; i < this.getNumberOfObjectives(); i++) {
-            s.setObjective(i, maxValuesToInvert.get(i) - s.getObjective(i));
+            s.setObjective(i,  -1 * s.getObjective(i));
+        }
+    }
+    
+    public void revertToMaximization(List<DoubleSolution> population) {
+        for (DoubleSolution s : population) {
+            this.revertToMaximization(s);
         }
     }
 }

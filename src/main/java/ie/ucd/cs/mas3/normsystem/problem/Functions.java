@@ -98,11 +98,7 @@ public class Functions {
         double gainedAmount = 0;
         this.walk(model);
         List<Individual> agents = model.getAgents();
-        for (Individual agent : agents) {
-            if (agent.segment == 3) {
-                gainedAmount += agent.wealth - agent.old_wealth;
-            }
-        }
+        gainedAmount = agents.stream().filter(agent -> (agent.segment == 3)).map(agent -> agent.wealth - agent.old_wealth).reduce(gainedAmount, (accumulator, _item) -> accumulator + _item);
         return gainedAmount / model.common_fund;
     }
 

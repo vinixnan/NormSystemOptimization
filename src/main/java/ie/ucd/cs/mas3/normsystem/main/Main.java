@@ -51,14 +51,15 @@ public class Main {
     }
 
     public static void main(String[] args) throws ConfigurationException, JMException, FileNotFoundException {
-
-        String algConf = "NSGAII";
+        /*Get parameters externally or set default*/
+        String algConf = "MOMBI";
+        int maxIterations = 200;
         int numAgents = 200;
         int numEvaders = 10;
         int numSegments = 5;
         double investRate = 0.05;
         int length = 10;
-        int path = 5000;
+        int path = 100;
         int i = 0;
         BiObjectiveJmetalOptimizationProblem problem;
         int qtdObj = 2;
@@ -86,20 +87,38 @@ public class Main {
         System.out.println(algConf + " numAgents:" + numAgents + " numEvaders:" + numEvaders + " numSegments:" + numSegments + " investRate:" + investRate + " length:" + length + " path:" + path + " idExecution:" + i + " qtdObj:" + qtdObj);
 
         String confApendixName = "conf_" + numAgents + "_" + numEvaders + "_" + numSegments + "_" + investRate + "_" + length + "_" + path;
+        /*--END  Get parameters externally or set default*/
+        
+        /*Create Algorithm Instance */
         ParametersforAlgorithm params = new ParametersforAlgorithm(algConf);
         params.setPopulationSize(Main.getPopulationSize(problem.getNumberOfObjectives()));
         params.setArchiveSize(Main.getPopulationSize(problem.getNumberOfObjectives()));
-        params.setMaxIteractions(500);
-
+        params.setMaxIteractions(maxIterations);
+        if (params.getAlgorithmName().startsWith("Mombi")) {
+            params.setWeightsPath("mombi2-weights/weight/W" + qtdObj + "D_" + params.getPopulationSize() + ".dat");
+        }
         AlgorithmBuilder ab = new AlgorithmBuilder(problem);
         LLHInterface alg = ab.create(params, new ParametersforHeuristics(opConf, problem.getNumberOfVariables()));
+        /*--ENDCreate Algorithm Instance */
+        
+        /*Create result directory*/
         String dir = "result/" + params.getAlgorithmName() + "/" + problem.getName() + "_obj_" + problem.getNumberOfObjectives() + "/" + confApendixName + "/" + params.getMaxIteractions();
         new File(dir).mkdirs();
         String funFile = dir + "/FUN";
         String varFile = dir + "/VAR";
+        /*--ENDCreate result directory*/
+        
+        /*Run generation by generation*/
         System.out.println("Run " + alg.getClass().getSimpleName());
         long init = System.currentTimeMillis();
-        alg.run();
+        alg.initMetaheuristic();
+        for (int it = 0; it < maxIterations; it++) {
+            alg.generateNewPopulation();
+            System.err.println(it);
+        }
+        /*--ENDRun generation by generation*/
+        
+        /*Get results, Submit it to Monte Carlo Sampling and get Non-Dominated Solutions*/
         List<DoubleSolution> result = alg.getResult();
         System.out.println("Monte Carlo Sampling");
         problem.evaluateUsingMonteCarloSampling(result);
@@ -109,13 +128,17 @@ public class Main {
             arq.add(s);
         }
         List<DoubleSolution> archive = arq.getSolutionList();
-
+        /*--ENDGet results, Submit it to Monte Carlo Sampling and get Non-Dominated Solutions*/
+        
+        /*Revert minimization problem into its normal form (maximization) and save the result in text files*/
+        System.out.println("Reverting to maximization");
+        problem.revertToMaximization(archive);
         new SolutionListOutput(archive)
                 .setSeparator("\t")
                 .setFunFileOutputContext(new DefaultFileOutputContext(funFile + "_ALLMIN" + i))
                 .setVarFileOutputContext(new DefaultFileOutputContext(varFile + "_ALLMIN" + i))
                 .print();
-
+        /*--ENDRevert minimization problem into its normal form (maximization) and save the result in text files*/
         long end = System.currentTimeMillis();
         double total = (((double) (end - init)) / 1000.0) / 60.0;
         System.out.println("The algorithm have found " + archive.size() + " solutions in " + total + " minutes");

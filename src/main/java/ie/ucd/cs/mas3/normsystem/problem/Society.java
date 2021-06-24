@@ -69,6 +69,8 @@ public class Society {
     protected int time_step;
     
     protected double catche;
+    
+    protected List<Individual> evaders;
 
     /**
      *
@@ -100,6 +102,7 @@ public class Society {
         this.catche = catche;
 
         this.agents = new ArrayList<>();
+        this.evaders = new ArrayList<>();
         int aux_qtd = this.num_evaders;
         SecureRandom rnd = new SecureRandom();
         for (int i = 0; i < this.num_agents; i++) {
@@ -107,6 +110,7 @@ public class Society {
             ind.setCatche(catche);
             if (aux_qtd > 0 && rnd.nextBoolean()) {
                 ind.is_evader = true;
+                this.evaders.add(ind);
             }
             this.agents.add(ind);
         }
@@ -120,15 +124,14 @@ public class Society {
     public void step() {
         this.common_fund = 0.0;
         //collect taxes from all agents
-        for (Individual ind : this.agents) {
+        this.agents.forEach(ind -> {
             this.common_fund = ind.step(common_fund, collecting_rates, fine_rate);
-        }
-        double payback = 0;
-        for (Individual ind : this.agents) {
-            payback = this.common_fund * (1 + this.invest_rate) * this.redistribution_rates[ind.segment] * this.num_segments / this.num_agents;
+        });
+        this.agents.forEach(ind -> {
+            double payback = this.common_fund * (1 + this.invest_rate) * this.redistribution_rates[ind.segment] * this.num_segments / this.num_agents;
             ind.wealth += payback;
             ind.payback = payback;
-        }
+        });
         this.assign_agents_to_segments();
         this.time_step += 1;
     }
@@ -139,18 +142,15 @@ public class Society {
      * @return
      */
     public double compute_gini_wealth() {
-        double num = 0;
-        double mean = 0;
         List<Double> weaths = this.getAgentsWeath();
-        for (int i = 0; i < weaths.size(); i++) {
-            double x_i = weaths.get(i);
-            mean += weaths.get(i);
-            for (int j = 0; j < weaths.size(); j++) {
-                double x_j = weaths.get(j);
-                num += Math.abs(x_i - x_j);
-            }
-        }
-        mean /= this.num_agents;
+        List<Double> res=new ArrayList<>();
+        weaths.forEach(x_i -> {
+            weaths.forEach(x_j -> {
+                res.add(Math.abs(x_i - x_j));
+            });
+        });
+        double mean = weaths.stream().mapToDouble(a->a).average().getAsDouble();
+        double num = res.stream().mapToDouble(a->a).sum();
         double gini_index = (num) / (2 * Math.pow(this.num_agents, 2) * mean);
         return gini_index;
     }
@@ -198,11 +198,7 @@ public class Society {
      * @return
      */
     public List<Individual> getEvadersAgents() {
-        List<Individual> toReturn = new ArrayList<>();
-        this.agents.stream().filter(ind -> (ind.is_evader)).forEachOrdered(ind -> {
-            toReturn.add(ind);
-        });
-        return toReturn;
+        return this.evaders;
     }
 
     /**
@@ -212,7 +208,6 @@ public class Society {
      */
     public List<Individual> getEvadersInSegment(int segment) {
         List<Individual> toReturn = new ArrayList<>();
-        List<Individual> evaders = this.getEvadersAgents();
         evaders.stream().filter(ind -> (ind.segment == segment)).forEachOrdered(ind -> {
             toReturn.add(ind);
         });
@@ -247,8 +242,12 @@ public class Society {
      */
     public void setEvaders(boolean[] evaders) {
         int i = 0;
+        this.evaders = new ArrayList<>();
         for (Individual a : this.agents) {
             a.is_evader = evaders[i++];
+            if(a.is_evader){
+                this.evaders.add(a);
+            }
         }
     }
 
@@ -293,11 +292,15 @@ public class Society {
 
         aux = obj.getJSONArray("agents");
         this.agents = new ArrayList<>();
+        this.evaders = new ArrayList<>();
         for (int i = 0; i < this.num_agents; i++) {
             JSONObject obj2 = aux.getJSONObject(i);
             Individual ind = new Individual();
             ind.createFromJSON(obj2);
             this.agents.add(ind);
+            if(ind.is_evader){
+                this.evaders.add(ind);
+            }
         }
     }
 

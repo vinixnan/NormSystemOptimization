@@ -31,9 +31,10 @@ do
                             for alg in $algs
                             do
                                 run=0
+                                outputname="saida_"$alg"_"$numAgents"_"$numEvaders"_"$numSegments"_"$investRate"_"$length"_"$path"_"$m
                                 while [ $run -le $qtdExp ]
                                 do
-                                    echo "java -Xms1024m -Xmx1024m -cp './target/NormSystemOptimization-1.0-SNAPSHOT.jar:./target/lib/*' ie.ucd.cs.mas3.normsystem.main.Main  $alg $numAgents $numEvaders $numSegments $investRate $length $path $m $run" >> "runMain.txt"
+                                    echo "java -Xms1024m -Xmx1024m -cp './target/NormSystemOptimization-1.0-SNAPSHOT.jar:./target/lib/*' ie.ucd.cs.mas3.normsystem.main.Main  $alg $numAgents $numEvaders $numSegments $investRate $length $path $m $run > $outputname 2> $outputname" >> "runMain.txt"
                                     let run=$run+1;
                                 done
                             done
@@ -45,5 +46,5 @@ do
     done
 done
 
-cat "runMain.txt" | xargs -I CMD -P 1  bash -c CMD &
+cat "runMain.txt" | xargs -I CMD -P 5  bash -c CMD &
 wait
