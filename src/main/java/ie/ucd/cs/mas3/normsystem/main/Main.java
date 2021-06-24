@@ -52,7 +52,7 @@ public class Main {
 
     public static void main(String[] args) throws ConfigurationException, JMException, FileNotFoundException {
         /*Get parameters externally or set default*/
-        String algConf = "MOMBI";
+        String algConf = "MOEADD";
         int maxIterations = 200;
         int numAgents = 200;
         int numEvaders = 10;
@@ -62,7 +62,7 @@ public class Main {
         int path = 100;
         int i = 0;
         BiObjectiveJmetalOptimizationProblem problem;
-        int qtdObj = 2;
+        int qtdObj = 5;
 
         String opConf = "SBX.Poly.default";
 
