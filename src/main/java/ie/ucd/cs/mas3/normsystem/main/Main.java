@@ -25,27 +25,19 @@ public class Main {
 
     public static int getPopulationSize(int qtdObj) {
         switch (qtdObj) {
-            case 2 -> {
+            case 2:
                 return 100;
-            }
-            case 3 -> {
+            case 3:
                 return 91;
-            }
-            //4
-            case 5 -> {
+            case 5:
                 return 210;
-            }
-            //6
-            case 8 -> {
+            case 8:
                 return 156;
-            }
             //9
-            case 10 -> {
+            case 10:
                 return 275;
-            }
-            case 15 -> {
+            case 15:
                 return 135;
-            }
         }
         return 100;
     }
