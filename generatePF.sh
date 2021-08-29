@@ -4,7 +4,7 @@ MaxIteractions=200
 
 
 
-m=5
+m=2
 
 ms="$m"
 
@@ -21,10 +21,10 @@ do
         problemName=$problemNameBase"_obj_"$m
 	labels=()
         #for 2 obj
-        #labels+=("conf_200_10_5_0.05_10_5000")
-        #labels+=("conf_200_30_5_0.05_10_5000")
+        labels+=("conf_200_10_5_0.05_10_5000")
+        labels+=("conf_200_30_5_0.05_10_5000")
         #for 5 obj
-	labels+=("conf_400_100_5_0.05_10_5000")
+	#labels+=("conf_400_100_5_0.05_10_5000")
 	for M in ${labels[@]}
 	do
 		pf="PF"$M"_"$m

@@ -1,12 +1,12 @@
 #!/bin/bash
 algs="NSGAII MOEADD SPEA2 MOMBI"
-numAgentsSet="200"
-numEvadersSet="10"
+numAgentsSet="400"
+numEvadersSet="100"
 numSegmentsSet="5" 
 investRateSet="0.05"
 lengthSet="10"
 pathSet="5000"
-qtdObjSet="2 5"
+qtdObjSet="2"
 qtdExp=30
 rm -f "runMain.txt"
 
