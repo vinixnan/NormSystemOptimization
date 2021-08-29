@@ -32,7 +32,7 @@ public class JmetalOptimizationProblem extends BiObjectiveJmetalOptimizationProb
     @Override
     public void evaluateUsingMonteCarloSampling(DoubleSolution s) {
         List<Society> societies = new ArrayList<>();
-        for (int i = 0; i < this.path; i++) {
+        for (int i = 0; i < this.individualPath; i++) {
             societies.add(this.createSociety(s));
         }
         double[] obj0 = new double[societies.size()];

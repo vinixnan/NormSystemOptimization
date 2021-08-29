@@ -8,6 +8,9 @@ import ie.ucd.cs.mas3.normsystem.problem.BiObjectiveJmetalOptimizationProblem;
 import ie.ucd.cs.mas3.normsystem.problem.JmetalOptimizationProblem;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import javax.management.JMException;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.uma.jmetal.solution.DoubleSolution;
@@ -45,13 +48,13 @@ public class Main {
     public static void main(String[] args) throws ConfigurationException, JMException, FileNotFoundException {
         /*Get parameters externally or set default*/
         String algConf = "MOEADD";
-        int maxIterations = 200;
+        int maxIterations = 500;
         int numAgents = 200;
         int numEvaders = 10;
         int numSegments = 5;
         double investRate = 0.05;
         int length = 10;
-        int path = 100;
+        int path = 5000;
         int i = 0;
         BiObjectiveJmetalOptimizationProblem problem;
         int qtdObj = 5;
@@ -106,20 +109,25 @@ public class Main {
         alg.initMetaheuristic();
         for (int it = 0; it < maxIterations; it++) {
             alg.generateNewPopulation();
-            System.err.println(it);
+            System.err.println(it+" for "+i);
         }
         /*--ENDRun generation by generation*/
         
         /*Get results, Submit it to Monte Carlo Sampling and get Non-Dominated Solutions*/
         List<DoubleSolution> result = alg.getResult();
-        System.out.println("Monte Carlo Sampling");
-        problem.evaluateUsingMonteCarloSampling(result);
+        System.out.println("Size: "+result.size());
+        //result = Main.removeRepeated(result);
         System.out.println("Remove Non Dominated");
         NonDominatedSolutionListArchive arq = new NonDominatedSolutionListArchive();
         for (Solution s : result) {
             arq.add(s);
         }
         List<DoubleSolution> archive = arq.getSolutionList();
+        result=archive;
+        System.out.println("Size: "+result.size());
+        System.out.println("Monte Carlo Sampling");
+        problem.evaluateUsingMonteCarloSampling(result);
+        
         /*--ENDGet results, Submit it to Monte Carlo Sampling and get Non-Dominated Solutions*/
         
         /*Revert minimization problem into its normal form (maximization) and save the result in text files*/
@@ -134,5 +142,18 @@ public class Main {
         long end = System.currentTimeMillis();
         double total = (((double) (end - init)) / 1000.0) / 60.0;
         System.out.println("The algorithm have found " + archive.size() + " solutions in " + total + " minutes");
+    }
+    
+    public static List<DoubleSolution> removeRepeated(List<DoubleSolution> pop){
+        HashMap<String, Boolean> isInside = new HashMap<>();
+        List<DoubleSolution> toReturn=new ArrayList<>();
+        for(DoubleSolution s : pop){
+            String str=Arrays.toString(s.getVariables().toArray());
+            if(!isInside.getOrDefault(str, false)){
+                isInside.put(str, true);
+                toReturn.add(s);
+            }
+        }
+        return toReturn;
     }
 }

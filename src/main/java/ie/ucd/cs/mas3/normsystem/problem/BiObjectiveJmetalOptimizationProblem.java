@@ -21,6 +21,7 @@ public class BiObjectiveJmetalOptimizationProblem extends AbstractDoubleProblem 
     protected int length;
     protected Functions fn;
     protected int path;
+    protected int individualPath;
 
     public BiObjectiveJmetalOptimizationProblem(int numAgents, int numEvaders, int numSegments, double investRate, int length, int path) {
         this.numAgents = numAgents;
@@ -80,7 +81,7 @@ public class BiObjectiveJmetalOptimizationProblem extends AbstractDoubleProblem 
 
     public void evaluateUsingMonteCarloSampling(DoubleSolution s) {
         List<Society> societies = new ArrayList<>();
-        for (int i = 0; i < this.path; i++) {
+        for (int i = 0; i < this.individualPath; i++) {
             societies.add(this.createSociety(s));
         }
         double[] obj0 = new double[societies.size()];
@@ -100,6 +101,8 @@ public class BiObjectiveJmetalOptimizationProblem extends AbstractDoubleProblem 
     }
     
     public void evaluateUsingMonteCarloSampling(List<DoubleSolution> population){
+        this.individualPath = this.path / population.size();
+        System.out.println("Individual Path"+this.individualPath);
         for (DoubleSolution s : population) {
             this.evaluateUsingMonteCarloSampling(s);
         }

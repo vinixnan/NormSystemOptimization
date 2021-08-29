@@ -1,12 +1,12 @@
 #!/bin/bash
 algs="NSGAII MOEADD SPEA2 MOMBI"
-numAgentsSet="400"
-numEvadersSet="100"
+numAgentsSet="200"
+numEvadersSet="10"
 numSegmentsSet="5" 
 investRateSet="0.05"
 lengthSet="10"
 pathSet="5000"
-qtdObjSet="2"
+qtdObjSet="2 5"
 qtdExp=30
 rm -f "runMain.txt"
 
@@ -45,5 +45,5 @@ do
     done
 done
 
-cat "runMain.txt" | xargs -I CMD -P 5  bash -c CMD &
+cat "runMain.txt" | xargs -I CMD -P 20  bash -c CMD &
 wait
