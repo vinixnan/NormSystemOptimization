@@ -10,7 +10,7 @@ ms="2 5"
 for m in $ms
 do
         pf="PF"$m
-        alldata="nalldata_"$m"obj.csv"
+        alldata="n2alldata_"$m"obj.csv"
         rm -f $pf
         rm -f $alldata
         echo "problem;type;runupdate;mombi2;moead;nsgaii;spea2" > $alldata
@@ -65,6 +65,10 @@ do
                 cat $pfnsgaii".Clean" >> $pf
                 cat $pfspea2".Clean" >> $pf
 
+                java -Xms1024m -Xmx1024m -cp './target/NormSystemOptimization-1.0-SNAPSHOT.jar:./target/lib/*' ie.ucd.cs.mas3.normsystem.main.cleanPfX $pf $pfmombi2 $m
+                java -Xms1024m -Xmx1024m -cp './target/NormSystemOptimization-1.0-SNAPSHOT.jar:./target/lib/*' ie.ucd.cs.mas3.normsystem.main.cleanPfX $pf $pfmoead $m
+                java -Xms1024m -Xmx1024m -cp './target/NormSystemOptimization-1.0-SNAPSHOT.jar:./target/lib/*' ie.ucd.cs.mas3.normsystem.main.cleanPfX $pf $pfnsgaii $m
+                java -Xms1024m -Xmx1024m -cp './target/NormSystemOptimization-1.0-SNAPSHOT.jar:./target/lib/*' ie.ucd.cs.mas3.normsystem.main.cleanPfX $pf $pfspea2 $m
 
 		run=1
 		while [ $run -le $qtdExp ]

@@ -23,7 +23,7 @@ public class cleanPf {
         Front pfFront = new ArrayFront(pfKnown);
 
         String dir = pfKnown + ".Clean";
-
+        
         List<PointSolution> pflist = FrontUtils.convertFrontToSolutionList(pfFront);
         NonDominatedSolutionListArchive nd = new NonDominatedSolutionListArchive();
         for (PointSolution sol : pflist) {
@@ -40,5 +40,5 @@ public class cleanPf {
                 .print();
 
     }
-
-}
+    
+                }
