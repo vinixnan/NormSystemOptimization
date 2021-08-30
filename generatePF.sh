@@ -1,31 +1,30 @@
 qtdExp=30
 problemNameBase="NormSystem"
 MaxIteractions=200
+MaxIteractions=500
+
+ms="2 5"
 
 
-
-m=2
-
-ms="$m"
-
-pf="PF"
-alldata="alldata_"$m"obj.csv"
-
-rm -f $pf
-rm -f $alldata
-
-echo "problem;type;runupdate;mombi2;moead;nsgaii;spea2" > $alldata
 
 for m in $ms
 do
+        pf="PF"$m
+        alldata="nalldata_"$m"obj.csv"
+        rm -f $pf
+        rm -f $alldata
+        echo "problem;type;runupdate;mombi2;moead;nsgaii;spea2" > $alldata
         problemName=$problemNameBase"_obj_"$m
 	labels=()
         #for 2 obj
-        labels+=("conf_200_10_5_0.05_10_5000")
-        labels+=("conf_200_30_5_0.05_10_5000")
+        #labels+=("conf_200_10_5_0.05_10_5000")
+        #labels+=("conf_200_30_5_0.05_10_5000")
         #for 5 obj
 	#labels+=("conf_400_100_5_0.05_10_5000")
-	for M in ${labels[@]}
+
+        #both
+        labels+=("conf_200_10_5_0.05_10_5000")
+        for M in ${labels[@]}
 	do
 		pf="PF"$M"_"$m
 		pfmombi2="result/Mombi2/"$problemName"/"$M"/"$MaxIteractions"/FUN_ALLMIN_ALL"
@@ -80,7 +79,7 @@ do
                         #java -Xms1024m -Xmx1024m -cp './target/NormSystemOptimization-1.0-SNAPSHOT.jar:./target/lib/*' ie.ucd.cs.mas3.normsystem.main.calculateHypervolumeForENGNottsAlgs $problemName"_"$M $pf $m 4 1 $mombi2 $moead $nsgaii $spea2 >> $alldata
                         #java -Xms1024m -Xmx1024m -cp './target/NormSystemOptimization-1.0-SNAPSHOT.jar:./target/lib/*' ie.ucd.cs.mas3.normsystem.main.calculateHypervolumeForENGNottsAlgs $problemName"_"$M $pf $m 4 0 $mombi2 $moead $nsgaii $spea2 >> $alldata
                         #java -Xms1024m -Xmx1024m -cp './target/NormSystemOptimization-1.0-SNAPSHOT.jar:./target/lib/*' ie.ucd.cs.mas3.normsystem.main.calculateHypervolumeForENGNottsAlgs $problemName"_"$M $pf $m 1 0 $mombi2 $moead $nsgaii $spea2 >> $alldata
-                        java -Xms1024m -Xmx1024m -cp './target/NormSystemOptimization-1.0-SNAPSHOT.jar:./target/lib/*' ie.ucd.cs.mas3.normsystem.main.calculateHypervolumeForENGNottsAlgs $problemName"_"$M $pf $m 3 0 $mombi2 $moead $nsgaii $spea2 >> $alldata
+                        #java -Xms1024m -Xmx1024m -cp './target/NormSystemOptimization-1.0-SNAPSHOT.jar:./target/lib/*' ie.ucd.cs.mas3.normsystem.main.calculateHypervolumeForENGNottsAlgs $problemName"_"$M $pf $m 3 0 $mombi2 $moead $nsgaii $spea2 >> $alldata
                         java -Xms1024m -Xmx1024m -cp './target/NormSystemOptimization-1.0-SNAPSHOT.jar:./target/lib/*' ie.ucd.cs.mas3.normsystem.main.calculateHypervolumeForENGNottsAlgs $problemName"_"$M $pf $m 3 1 $mombi2 $moead $nsgaii $spea2 >> $alldata
 			let run=$run+1;
 		done
