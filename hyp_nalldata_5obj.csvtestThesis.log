@@ -1,0 +1,18 @@
+[1] "/home/vinicius/PJT/NormSystemOptimization/hyp_nalldata_5obj.csv"
+[1] "HYPERVOLUME---------------------------------"
+Multiple comparison test after Kruskal-Wallis 
+p.value: 0.05 
+Comparisons
+               obs.dif critical.dif difference
+MOEAD-MOMBI2   8.50000     23.69541      FALSE
+MOEAD-NSGAII  72.70000     23.69541       TRUE
+MOEAD-SPEA2   46.66667     23.69541       TRUE
+MOMBI2-NSGAII 64.20000     23.69541       TRUE
+MOMBI2-SPEA2  38.16667     23.69541       TRUE
+NSGAII-SPEA2  26.03333     23.69541       TRUE
+                           result.statistic result.p.value
+Kruskal-Wallis chi-squared          85.4838    2.04317e-18
+[1] "0.378164024701226, 0.386070787061355, 0.321709258178966, 0.343155870203687"
+[1] "----------------------------------------------"
+
+MOEAD==MOMBI2

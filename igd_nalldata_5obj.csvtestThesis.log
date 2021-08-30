@@ -1,0 +1,18 @@
+[1] "/home/vinicius/PJT/NormSystemOptimization/igd_nalldata_5obj.csv"
+[1] "IGD+---------------------------------"
+Multiple comparison test after Kruskal-Wallis 
+p.value: 0.05 
+Comparisons
+               obs.dif critical.dif difference
+MOEAD-MOMBI2  54.13333     23.69541       TRUE
+MOEAD-NSGAII  83.43333     23.69541       TRUE
+MOEAD-SPEA2   42.43333     23.69541       TRUE
+MOMBI2-NSGAII 29.30000     23.69541       TRUE
+MOMBI2-SPEA2  11.70000     23.69541      FALSE
+NSGAII-SPEA2  41.00000     23.69541       TRUE
+                           result.statistic result.p.value
+Kruskal-Wallis chi-squared         89.06099   3.485234e-19
+[1] "0.0860260278552037, 0.0390123552639718, 0.10936105157612, 0.0756124422820689"
+[1] "----------------------------------------------"
+
+MOEAD > ALL
