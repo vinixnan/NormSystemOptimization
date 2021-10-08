@@ -10,7 +10,7 @@ import org.uma.jmetal.solution.DoubleSolution;
 
 /**
  *
- * @author Vinicius Renan de Carvalho
+ * 
  */
 public class BiObjectiveJmetalOptimizationProblem extends AbstractDoubleProblem {
 
