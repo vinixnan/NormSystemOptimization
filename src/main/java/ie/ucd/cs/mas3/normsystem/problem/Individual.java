@@ -6,7 +6,7 @@ import org.json.JSONObject;
 
 /**
  *
- * 
+ * @author Vinicius Renan de Carvalho
  */
 @Data
 public class Individual {
