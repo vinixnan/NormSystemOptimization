@@ -5,7 +5,7 @@ import lombok.Data;
 
 /**
  *
- * 
+ * @author Vinicius Renan de Carvalho
  */
 @Data
 public class Functions {
