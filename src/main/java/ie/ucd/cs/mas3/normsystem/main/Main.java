@@ -22,7 +22,7 @@ import org.uma.jmetal.util.fileoutput.impl.DefaultFileOutputContext;
 
 /**
  *
- * 
+ * @author viniciusdecarvalho
  */
 public class Main {
 
