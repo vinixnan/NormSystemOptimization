@@ -23,7 +23,7 @@ import org.uma.jmetal.util.point.PointSolution;
 
 /**
  *
- * 
+ * @author vinicius
  */
 public class calculateHypervolumeForENGNottsAlgs {
 
