@@ -111,6 +111,7 @@ public class Society {
             if (aux_qtd > 0 && rnd.nextBoolean()) {
                 ind.is_evader = true;
                 this.evaders.add(ind);
+                aux_qtd--;
             }
             this.agents.add(ind);
         }
