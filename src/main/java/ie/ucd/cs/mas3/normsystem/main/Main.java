@@ -6,6 +6,7 @@ import br.usp.poli.pcs.lti.jmetalhhhelper.core.interfaces.LLHInterface;
 import br.usp.poli.pcs.lti.jmetalhhhelper.util.AlgorithmBuilder;
 import ie.ucd.cs.mas3.normsystem.problem.BiObjectiveJmetalOptimizationProblem;
 import ie.ucd.cs.mas3.normsystem.problem.JmetalOptimizationProblem;
+import ie.ucd.cs.mas3.normsystem.reasoning.Agent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -106,6 +107,17 @@ public class Main {
         /*Run generation by generation*/
         System.out.println("Run " + alg.getClass().getSimpleName());
         long init = System.currentTimeMillis();
+        
+        //REASONING ENGINE INIT
+        
+        Agent[] reasoningAgents = new Agent[5];
+        for (int j = 0; j < 5; j++) {
+            reasoningAgents[j] = new Agent(problem.getNumberOfObjectives());
+            reasoningAgents[j].generateWeights();
+        }
+        
+        //REASONING ENGINE INIT
+        
         alg.initMetaheuristic();
         for (int it = 0; it < maxIterations; it++) {
             alg.generateNewPopulation();
@@ -127,6 +139,13 @@ public class Main {
         System.out.println("Size: "+result.size());
         System.out.println("Monte Carlo Sampling");
         problem.evaluateUsingMonteCarloSampling(result);
+        
+        //RUN REASONING
+        for(Agent reasoner:reasoningAgents){
+            reasoner.findBestInPopulation(result);
+        }
+        
+        //@TODO WHat to do with results inside eache reasoner?
         
         /*--ENDGet results, Submit it to Monte Carlo Sampling and get Non-Dominated Solutions*/
         
