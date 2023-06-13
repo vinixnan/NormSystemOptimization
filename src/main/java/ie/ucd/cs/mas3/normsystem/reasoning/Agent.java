@@ -2,24 +2,27 @@ package ie.ucd.cs.mas3.normsystem.reasoning;
 
 import static ie.ucd.cs.mas3.normsystem.reasoning.AgentKind.NUMBER_OF_DIFFERENT_AGENTS;
 import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import lombok.Data;
 import org.apache.commons.math3.stat.StatUtils;
 import org.uma.jmetal.solution.DoubleSolution;
-import org.uma.jmetal.solution.Solution;
 
 /**
  *
  * @author viniciusdecarvalho
  */
+@Data
 public class Agent {
 
     protected int nObj;
     protected int preferedObj;
     protected double[] weights;
     protected int kind;
-    protected Solution personalBest;
+    protected DoubleSolution personalBest;
     protected double personalBestFitness;
+    protected String personalBestLabel;
 
     public Agent(int nObj, int preferedObj, int kind) {
         this.nObj = nObj;
@@ -28,6 +31,7 @@ public class Agent {
         this.weights = null;
         this.personalBestFitness = Double.MAX_VALUE;
         this.personalBest = null;
+        this.personalBestLabel = null;
     }
 
     public Agent(int nObj, int kind) {
@@ -38,6 +42,7 @@ public class Agent {
         this.weights = null;
         this.personalBestFitness = Double.MAX_VALUE;
         this.personalBest = null;
+        this.personalBestLabel = null;
     }
 
     public Agent(int nObj) {
@@ -48,6 +53,7 @@ public class Agent {
         this.weights = null;
         this.personalBestFitness = Double.MAX_VALUE;
         this.personalBest = null;
+        this.personalBestLabel = null;
     }
 
     public void generateWeights() {
@@ -60,7 +66,7 @@ public class Agent {
         }
     }
 
-    public void findBestInPopulation(Solution s) {
+    public void findBestInPopulation(DoubleSolution s) {
         double[] values = new double[s.getObjectives().length];
         for (int i = 0; i < s.getObjectives().length; i++) {
             values[i] = s.getObjectives()[i] * this.weights[i];
@@ -69,6 +75,7 @@ public class Agent {
         if (currentFitness < this.personalBestFitness) {
             this.personalBestFitness = currentFitness;
             this.personalBest = s;
+            this.personalBestLabel = Arrays.toString(s.getVariables().toArray());
         }
     }
 }
