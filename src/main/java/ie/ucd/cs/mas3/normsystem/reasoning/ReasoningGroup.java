@@ -1,5 +1,6 @@
 package ie.ucd.cs.mas3.normsystem.reasoning;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,16 +14,26 @@ import org.uma.jmetal.solution.DoubleSolution;
 @Data
 public class ReasoningGroup {
 
-    private final Agent[] reasoningAgents;
+    protected final List<Agent> reasoningAgents;
     protected int bestValue;
     protected DoubleSolution bestSolution;
     protected String bestKey;
 
-    public ReasoningGroup(int numAgent, int nObj) {
-        reasoningAgents = new Agent[numAgent];
-        for (int j = 0; j < numAgent; j++) {
-            reasoningAgents[j] = new Agent(nObj);
-            reasoningAgents[j].generateWeights();
+    public ReasoningGroup(int numVariableAgents, int numObjectiveAgents, int nObj, int numSegments) {
+        this.reasoningAgents = new ArrayList<>();
+        for (int j = 0; j < numObjectiveAgents; j++) {
+            Agent ag = new ObjectiveAgent(nObj);
+            this.reasoningAgents.add(ag);
+        }
+        int qtdAgentPerSegment = numVariableAgents / numSegments;
+        for (int preferedSegment = 0; preferedSegment < numSegments; preferedSegment++) {
+            for (int j = 0; j < qtdAgentPerSegment; j++) {
+                Agent ag = new VariableAgent(preferedSegment);
+                this.reasoningAgents.add(ag);
+            }
+        }
+        for (Agent ag : this.reasoningAgents) {
+            ag.init();
         }
     }
 

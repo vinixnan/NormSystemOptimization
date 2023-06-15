@@ -25,45 +25,55 @@ import org.uma.jmetal.util.fileoutput.impl.DefaultFileOutputContext;
  * @author vinicius
  */
 public class runReasoningEngineOverResults {
-
+    
     public static void main(String[] args) throws FileNotFoundException {
-
+        
         String varFile = args[0];
         String funFile = args[1];
-
-        int nAgents = Integer.parseInt(args[2]);
-        int nObj = Integer.parseInt(args[3]);
-        int i = Integer.parseInt(args[4]);
-
+        
+        int numVariableAgents = Integer.parseInt(args[2]);
+        int numObjectiveAgents = Integer.parseInt(args[3]);
+        int nObj = Integer.parseInt(args[4]);
+        int i = Integer.parseInt(args[5]);
+        
+        int numSegments = 5;
+        
         List<DoubleSolution> pflist = generatePopulation(varFile, funFile, nObj);
-
+        
         NonDominatedSolutionListArchive nd = new NonDominatedSolutionListArchive();
         for (DoubleSolution sol : pflist) {
             calculateHypervolumeForENGNottsAlgs.revertToMaximization(sol, sol.getNumberOfObjectives());
             nd.add(sol);
         }
         pflist = nd.getSolutionList();
-
-        ReasoningGroup rg = new ReasoningGroup(nAgents, nObj);
+        ReasoningGroup rg = new ReasoningGroup(numVariableAgents, numObjectiveAgents, nObj, numSegments);
         DoubleSolution bestSolution = rg.getBestSolution(pflist);
         int bestValue = rg.getBestValue();
         String bestKey = rg.getBestKey();
-
-        System.out.println("The set of variables: "+bestKey + " is the best now with " + bestValue +" agent selections. The objective set is "+Arrays.toString(bestSolution.getObjectives())+"\n");
-
+        
+        BiObjectiveJmetalOptimizationProblem p = null;
+        if (nObj == 2) {
+            p = new BiObjectiveJmetalOptimizationProblem(0, 0, numSegments, 0.0, 0, 0);
+        } else {
+            p = new JmetalOptimizationProblem(0, 0, numSegments, 0.0, 0, 0);
+        }
+        p.revertToMaximization(bestSolution);
+        
+        System.out.println("The set of variables: " + bestKey + " is the best now with " + bestValue + " agent selections. The objective set is " + Arrays.toString(bestSolution.getObjectives()) + "\n");
+        
         List<DoubleSolution> finalNewResult = new ArrayList<>();
         finalNewResult.add(bestSolution);
         for (DoubleSolution s : finalNewResult) {
             calculateHypervolumeForENGNottsAlgs.revertToMaximization(s, s.getNumberOfObjectives());
         }
-
+        
         new SolutionListOutput(finalNewResult)
                 .setSeparator("\t")
                 .setFunFileOutputContext(new DefaultFileOutputContext(funFile + "_ALLMINSINGLE" + i))
                 .setVarFileOutputContext(new DefaultFileOutputContext(varFile + "_ALLMINSINGLE" + i))
                 .print();
     }
-
+    
     public static List<String> readFile(String fileName) {
         try {
             return Files.readLines(new File(fileName), Charset.forName("utf-8"));
@@ -72,7 +82,7 @@ public class runReasoningEngineOverResults {
         }
         return null;
     }
-
+    
     public static List<DoubleSolution> generatePopulation(String variablesFile, String objectiveFile, int nObj) {
         AbstractDoubleProblem p = null;
         List<String> variablesList = readFile(variablesFile);
@@ -95,7 +105,7 @@ public class runReasoningEngineOverResults {
         }
         return toReturn;
     }
-
+    
     public static DoubleSolution generateSolution(AbstractDoubleProblem p, String[] variables, String[] objectives, int nObj) {
         DoubleSolution ds = new DefaultDoubleSolution(p);
         for (int i = 0; i < nObj; i++) {

@@ -29,7 +29,9 @@ do
                         nsgaii="result/Nsgaii/"$problemName"/"$M"/"$MaxIteractions"/FUN_ALLMIN"$run
                         nsgaii_var="result/Nsgaii/"$problemName"/"$M"/"$MaxIteractions"/VAR_ALLMIN"$run
                         spea2="result/Spea2/"$problemName"/"$M"/"$MaxIteractions"/FUN_ALLMIN"$run
-                        java -Xms1024m -Xmx1024m -cp './target/NormSystemOptimization-1.0-SNAPSHOT.jar:./target/lib/*' ie.ucd.cs.mas3.normsystem.reasoning.runReasoningEngineOverResults $nsgaii_var $nsgaii 100 $m $run
+                        java -Xms1024m -Xmx1024m -cp './target/NormSystemOptimization-1.0-SNAPSHOT.jar:./target/lib/*' ie.ucd.cs.mas3.normsystem.reasoning.runReasoningEngineOverResults $nsgaii_var $nsgaii 100 0 $m $run
+                        java -Xms1024m -Xmx1024m -cp './target/NormSystemOptimization-1.0-SNAPSHOT.jar:./target/lib/*' ie.ucd.cs.mas3.normsystem.reasoning.runReasoningEngineOverResults $nsgaii_var $nsgaii 0 100 $m $run
+                        
                         let run=$run+1;
 		done
 		
