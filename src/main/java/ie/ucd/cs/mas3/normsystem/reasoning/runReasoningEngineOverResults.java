@@ -51,8 +51,8 @@ public class runReasoningEngineOverResults {
 
         new SolutionListOutput(finalNewResult)
                 .setSeparator("\t")
-                .setFunFileOutputContext(new DefaultFileOutputContext(pfFile + "_ALLMINSINGLE" + i))
-                .setVarFileOutputContext(new DefaultFileOutputContext(pfFile + "_ALLMINSINGLE" + i))
+                .setFunFileOutputContext(new DefaultFileOutputContext(pfFile + "_FUN_ALLMINSINGLE" + i))
+                .setVarFileOutputContext(new DefaultFileOutputContext(pfFile + "_VAR_ALLMINSINGLE" + i))
                 .print();
     }
 
