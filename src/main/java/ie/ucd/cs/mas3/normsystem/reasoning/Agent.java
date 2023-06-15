@@ -67,9 +67,10 @@ public class Agent {
     }
 
     public void findBestInPopulation(DoubleSolution s) {
-        double[] values = new double[s.getObjectives().length];
-        for (int i = 0; i < s.getObjectives().length; i++) {
-            values[i] = s.getObjectives()[i] * this.weights[i];
+        double[] values = new double[this.nObj];
+        double[] objs=s.getObjectives();
+        for (int i = 0; i < this.nObj; i++) {
+            values[i] = objs[i] * this.weights[i];
         }
         double currentFitness = StatUtils.sum(values);
         if (currentFitness < this.personalBestFitness) {

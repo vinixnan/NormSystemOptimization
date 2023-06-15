@@ -1,5 +1,6 @@
 package ie.ucd.cs.mas3.normsystem.reasoning;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +39,7 @@ public class ReasoningGroup {
             if (rankOfSolutions.get(key) > bestValue) {
                 bestValue = rankOfSolutions.get(key);
                 bestSolution = rankOfSolutionsSolutions.get(key);
-                System.out.println(key + " is the best now with " + bestValue);
+                System.out.println(key + " is the best now with " + bestValue + Arrays.toString(bestSolution.getObjectives()));
             }
         }
         return bestSolution;

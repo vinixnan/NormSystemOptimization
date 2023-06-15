@@ -145,16 +145,16 @@ public class Main {
         problem.revertToMaximization(archive);
         new SolutionListOutput(archive)
                 .setSeparator("\t")
-                .setFunFileOutputContext(new DefaultFileOutputContext(funFile + "_ALLSOLUTIONS_ALLMIN" + i))
-                .setVarFileOutputContext(new DefaultFileOutputContext(varFile + "_ALLSOLUTIONS_ALLMIN" + i))
+                .setFunFileOutputContext(new DefaultFileOutputContext(funFile + "_ALLMIN" + i))
+                .setVarFileOutputContext(new DefaultFileOutputContext(varFile + "_ALLMIN" + i))
                 .print();
         /*--ENDRevert minimization problem into its normal form (maximization) and save the result in text files*/
 
         //Save the best solution into a file
         new SolutionListOutput(finalNewResult)
                 .setSeparator("\t")
-                .setFunFileOutputContext(new DefaultFileOutputContext(funFile + "_ALLMIN" + i))
-                .setVarFileOutputContext(new DefaultFileOutputContext(varFile + "_ALLMIN" + i))
+                .setFunFileOutputContext(new DefaultFileOutputContext(funFile + "_ALLMINSINGLE" + i))
+                .setVarFileOutputContext(new DefaultFileOutputContext(varFile + "_ALLMINSINGLE" + i))
                 .print();
         
         long end = System.currentTimeMillis();

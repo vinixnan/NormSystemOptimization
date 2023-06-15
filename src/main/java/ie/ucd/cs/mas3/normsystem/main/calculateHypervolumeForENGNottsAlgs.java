@@ -12,6 +12,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.solution.Solution;
 import org.uma.jmetal.util.archive.impl.NonDominatedSolutionListArchive;
 import org.uma.jmetal.util.fileoutput.SolutionListOutput;
@@ -153,6 +154,12 @@ public class calculateHypervolumeForENGNottsAlgs {
     }
 
     public static void revertToMaximization(PointSolution s, int m) {
+        for (int i = 0; i < m; i++) {
+            s.setObjective(i, -1 * s.getObjective(i));
+        }
+    }
+    
+    public static void revertToMaximization(DoubleSolution s, int m) {
         for (int i = 0; i < m; i++) {
             s.setObjective(i, -1 * s.getObjective(i));
         }
