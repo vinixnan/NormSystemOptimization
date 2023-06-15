@@ -1,18 +1,22 @@
 package ie.ucd.cs.mas3.normsystem.reasoning;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.Data;
 import org.uma.jmetal.solution.DoubleSolution;
 
 /**
  *
  * @author viniciusdecarvalho
  */
+@Data
 public class ReasoningGroup {
 
     private final Agent[] reasoningAgents;
+    protected int bestValue;
+    protected DoubleSolution bestSolution;
+    protected String bestKey;
 
     public ReasoningGroup(int numAgent, int nObj) {
         reasoningAgents = new Agent[numAgent];
@@ -33,13 +37,13 @@ public class ReasoningGroup {
             rankOfSolutionsSolutions.put(reasoner.getPersonalBestLabel(), reasoner.getPersonalBest());
         }
         //Find the best
-        int bestValue = 0;
-        DoubleSolution bestSolution = null;
+        bestValue = 0;
+        bestSolution = null;
         for (String key : rankOfSolutions.keySet()) {
             if (rankOfSolutions.get(key) > bestValue) {
                 bestValue = rankOfSolutions.get(key);
                 bestSolution = rankOfSolutionsSolutions.get(key);
-                System.out.println(key + " is the best now with " + bestValue + Arrays.toString(bestSolution.getObjectives()));
+                bestKey = key;
             }
         }
         return bestSolution;
