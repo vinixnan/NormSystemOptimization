@@ -3,7 +3,6 @@ package ie.ucd.cs.mas3.normsystem.reasoning;
 import lombok.Data;
 import org.uma.jmetal.solution.DoubleSolution;
 
-import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -17,10 +16,11 @@ public abstract class Agent {
     protected DoubleSolution personalBest;
     protected double personalBestFitness;
     protected String personalBestLabel;
+    protected Random rdn;
 
-    public Agent() {
-        Random rdn = new SecureRandom();
-        this.kind = rdn.nextInt(NUMBER_OF_DIFFERENT_AGENTS);
+    public Agent(Random rdn) {
+        this.rdn = rdn;
+        this.kind = this.rdn.nextInt(NUMBER_OF_DIFFERENT_AGENTS);
         this.personalBestFitness = Double.MAX_VALUE;
         this.personalBest = null;
         this.personalBestLabel = null;

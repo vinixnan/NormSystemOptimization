@@ -1,6 +1,5 @@
 package ie.ucd.cs.mas3.normsystem.reasoning;
 
-import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -15,9 +14,8 @@ public class AgentKind {
     public static final int SELFISH = 1;
     public static final int MODERATE_SELFISH = 2;
 
-    public static double[] generateWeights(int nObj, int preferedObj, int kind) {
+    public static double[] generateWeights(int nObj, int preferedObj, int kind, Random rdn) {
         double[] weights = new double[nObj];
-        Random rdn = new SecureRandom();
         switch (kind) {
             case FAIR:
                 Arrays.fill(weights, 1.0 / ((double) nObj));

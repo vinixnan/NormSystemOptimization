@@ -1,6 +1,5 @@
 package ie.ucd.cs.mas3.normsystem.reasoning;
 
-import java.security.SecureRandom;
 import lombok.Data;
 import org.uma.jmetal.solution.DoubleSolution;
 
@@ -17,13 +16,13 @@ public class VariableAgent extends Agent {
     protected int preferedSegment;
     protected int preferedDecision;
 
-    public VariableAgent(int preferedSegment) {
+    public VariableAgent(int preferedSegment, Random rdn) {
+        super(rdn);
         this.preferedSegment = preferedSegment; //segments have to be equally distributed
     }
 
     @Override
     public void init() {
-        Random rdn = new SecureRandom();
         //4 possible decision cathe, finerate, collecting, redistribution. 
         //but we are taking just collecting - 2 and redistribution - 3
         this.preferedDecision = rdn.nextInt(2, 4);

@@ -1,6 +1,7 @@
 package ie.ucd.cs.mas3.normsystem.reasoning;
 
 import com.google.common.io.Files;
+import com.google.common.primitives.Ints;
 import ie.ucd.cs.mas3.normsystem.main.calculateHypervolumeForENGNottsAlgs;
 import ie.ucd.cs.mas3.normsystem.problem.BiObjectiveJmetalOptimizationProblem;
 import ie.ucd.cs.mas3.normsystem.problem.JmetalOptimizationProblem;
@@ -8,9 +9,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.uma.jmetal.problem.impl.AbstractDoubleProblem;
@@ -35,6 +38,8 @@ public class runReasoningEngineOverResults {
         int numObjectiveAgents = Integer.parseInt(args[3]);
         int nObj = Integer.parseInt(args[4]);
         int i = Integer.parseInt(args[5]);
+        String algName = args[6];
+        String problemName = args[7];
         
         int numSegments = 5;
         
@@ -46,7 +51,10 @@ public class runReasoningEngineOverResults {
             nd.add(sol);
         }
         pflist = nd.getSolutionList();
-        ReasoningGroup rg = new ReasoningGroup(numVariableAgents, numObjectiveAgents, nObj, numSegments);
+        
+        byte[] seed = Ints.toByteArray(0);
+        Random rdn = new SecureRandom(seed);
+        ReasoningGroup rg = new ReasoningGroup(numVariableAgents, numObjectiveAgents, nObj, numSegments, rdn);
         DoubleSolution bestSolution = rg.getBestSolution(pflist);
         int bestValue = rg.getBestValue();
         String bestKey = rg.getBestKey();
@@ -58,8 +66,9 @@ public class runReasoningEngineOverResults {
             p = new JmetalOptimizationProblem(0, 0, numSegments, 0.0, 0, 0);
         }
         p.revertToMaximization(bestSolution);
-        
-        System.out.println("The set of variables: " + bestKey + " is the best now with " + bestValue + " agent selections. The objective set is " + Arrays.toString(bestSolution.getObjectives()) + "\n");
+
+        //System.out.println("The set of variables: " + bestKey + " is the best now with " + bestValue + " agent selections. The objective set is " + Arrays.toString(bestSolution.getObjectives()) + "\n");
+        System.out.println(i + ";" + bestKey + ";" + bestValue + ";" + Arrays.toString(bestSolution.getObjectives()) + ";" + algName + ";" + problemName);
         
         List<DoubleSolution> finalNewResult = new ArrayList<>();
         finalNewResult.add(bestSolution);

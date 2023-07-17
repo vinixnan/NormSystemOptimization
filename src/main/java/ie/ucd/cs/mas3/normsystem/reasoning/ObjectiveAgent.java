@@ -1,6 +1,5 @@
 package ie.ucd.cs.mas3.normsystem.reasoning;
 
-import java.security.SecureRandom;
 import java.util.Random;
 import lombok.Data;
 
@@ -18,15 +17,15 @@ public class ObjectiveAgent extends Agent {
     protected int preferedObj;
     protected double[] weights;
 
-    public ObjectiveAgent(int nObj) {
+    public ObjectiveAgent(int nObj, Random rdn) {
+        super(rdn);
         this.nObj = nObj;
     }
 
     @Override
     public void init() {
-        Random rdn = new SecureRandom();
         this.preferedObj = rdn.nextInt(nObj);
-        this.weights = AgentKind.generateWeights(nObj, preferedObj, kind);
+        this.weights = AgentKind.generateWeights(nObj, preferedObj, kind, rdn);
     }
 
     @Override

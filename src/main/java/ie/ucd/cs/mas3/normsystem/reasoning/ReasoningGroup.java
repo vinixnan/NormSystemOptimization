@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import lombok.Data;
 import org.uma.jmetal.solution.DoubleSolution;
 
@@ -20,15 +21,19 @@ public class ReasoningGroup {
     protected String bestKey;
 
     public ReasoningGroup(int numVariableAgents, int numObjectiveAgents, int nObj, int numSegments) {
+        this(numVariableAgents, numObjectiveAgents, nObj, numSegments, null);
+    }
+
+    public ReasoningGroup(int numVariableAgents, int numObjectiveAgents, int nObj, int numSegments, Random rdn) {
         this.reasoningAgents = new ArrayList<>();
         for (int j = 0; j < numObjectiveAgents; j++) {
-            Agent ag = new ObjectiveAgent(nObj);
+            Agent ag = new ObjectiveAgent(nObj, rdn);
             this.reasoningAgents.add(ag);
         }
         int qtdAgentPerSegment = numVariableAgents / numSegments;
         for (int preferedSegment = 0; preferedSegment < numSegments; preferedSegment++) {
             for (int j = 0; j < qtdAgentPerSegment; j++) {
-                Agent ag = new VariableAgent(preferedSegment);
+                Agent ag = new VariableAgent(preferedSegment, rdn);
                 this.reasoningAgents.add(ag);
             }
         }
