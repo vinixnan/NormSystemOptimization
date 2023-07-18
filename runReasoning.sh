@@ -24,8 +24,15 @@ do
 		run=1
                 rm -f $problemName"_"$M"_"variable.csv
                 rm -f $problemName"_"$M"_"objective.csv
-                echo "Run;bestKey;bestValue;objectives;algName;problemName" > $problemName"_"$M"_"objective.csv
-                echo "Run;bestKey;bestValue;objectives;algName;problemName" > $problemName"_"$M"_"variable.csv
+                if [ $m -le 2 ]
+                then
+                    objstr="obj1;obj2;"
+                else
+                    objstr="obj1;obj2;obj3;obj4;obj5;"
+                fi
+                echo "Run;bestKey;bestValue;"$objstr"algName;problemName;fitness" > $problemName"_"$M"_"objective.csv
+                 echo "Run;bestKey;bestValue;"$objstr"algName;problemName;fitness" > $problemName"_"$M"_"variable.csv
+                
 		while [ $run -le $qtdExp ]
 		do
 			mombi2="result/Mombi2/"$problemName"/"$M"/"$MaxIteractions"/FUN_ALLMIN"$run

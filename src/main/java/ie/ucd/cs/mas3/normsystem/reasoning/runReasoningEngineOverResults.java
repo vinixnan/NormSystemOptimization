@@ -58,7 +58,7 @@ public class runReasoningEngineOverResults {
         DoubleSolution bestSolution = rg.getBestSolution(pflist);
         int bestValue = rg.getBestValue();
         String bestKey = rg.getBestKey();
-        
+        double fitness=rg.avgFitness;
         BiObjectiveJmetalOptimizationProblem p = null;
         if (nObj == 2) {
             p = new BiObjectiveJmetalOptimizationProblem(0, 0, numSegments, 0.0, 0, 0);
@@ -66,9 +66,9 @@ public class runReasoningEngineOverResults {
             p = new JmetalOptimizationProblem(0, 0, numSegments, 0.0, 0, 0);
         }
         p.revertToMaximization(bestSolution);
-
+        //[0.9982308406082965, 0.8266800000000001]
         //System.out.println("The set of variables: " + bestKey + " is the best now with " + bestValue + " agent selections. The objective set is " + Arrays.toString(bestSolution.getObjectives()) + "\n");
-        System.out.println(i + ";" + bestKey + ";" + bestValue + ";" + Arrays.toString(bestSolution.getObjectives()) + ";" + algName + ";" + problemName);
+        System.out.println(i + ";" + bestKey+";"  + bestValue + ";" + Arrays.toString(bestSolution.getObjectives()).replace("[", "").replace("]", ";").replace(", ", ";") + algName + ";" + problemName+";"+fitness);
         
         List<DoubleSolution> finalNewResult = new ArrayList<>();
         finalNewResult.add(bestSolution);

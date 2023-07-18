@@ -37,7 +37,7 @@ public abstract class Agent {
         if (whichIsBest(currentFitness, this.personalBestFitness)) {
             this.personalBestFitness = currentFitness;
             this.personalBest = s;
-            this.personalBestLabel = Arrays.toString(s.getVariables().toArray());
+            this.personalBestLabel = Arrays.toString(s.getVariables().toArray()).replace("[", "").replace("]","").replace(", ", "_");
         }
     }
 
