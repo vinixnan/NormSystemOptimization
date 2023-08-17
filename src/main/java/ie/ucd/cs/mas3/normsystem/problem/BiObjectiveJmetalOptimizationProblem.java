@@ -61,7 +61,7 @@ public class BiObjectiveJmetalOptimizationProblem extends AbstractDoubleProblem 
         double[] redistributionRates = new double[this.numSegments];
         for (int i = 0; i < this.numSegments; i++) {
             collectingRates[i] = decisionVariables.get(i + 2);
-            redistributionRates[i] = decisionVariables.get(i + this.numSegments);
+            redistributionRates[i] = decisionVariables.get(2  + i + this.numSegments);
         }
         Society sc = new Society(collectingRates, redistributionRates, numAgents, numEvaders, fineRate, investRate, catche);
         return sc;

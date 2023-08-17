@@ -1,10 +1,14 @@
 package ie.ucd.cs.mas3.normsystem;
 
+import ie.ucd.cs.mas3.normsystem.problem.BiObjectiveJmetalOptimizationProblem;
 import ie.ucd.cs.mas3.normsystem.problem.Individual;
 import ie.ucd.cs.mas3.normsystem.problem.Functions;
 import ie.ucd.cs.mas3.normsystem.problem.Society;
+import java.util.Arrays;
 import junit.framework.TestCase;
 import org.junit.Test;
+import org.uma.jmetal.solution.DoubleSolution;
+import org.uma.jmetal.solution.impl.DefaultDoubleSolution;
 
 /**
  *
@@ -79,6 +83,65 @@ public class BaseProblemTest extends TestCase {
         toCompare.createFromJSON(jsonAgent1After);
         firstAgent.step(sc.getCommon_fund(), sc.getCollecting_rates(), sc.getFine_rate());
         assertTrue(firstAgent.equals(toCompare));
+    }
+    
+    protected DoubleSolution createSolution(double catche, double fine, double[] collect, double[] redistribute){
+        int numSegment=collect.length;
+        BiObjectiveJmetalOptimizationProblem problem=new BiObjectiveJmetalOptimizationProblem(200, 10, numSegment, 0.05, 10, 5000);
+        DoubleSolution s=new DefaultDoubleSolution(problem);
+        double[] vars=new double[12];
+        vars[0]=catche/100.0;
+        vars[1]=fine/100.0;
+        for (int i = 0; i < numSegment; i++) {
+            vars[i+2]=collect[i]/100.0;
+            vars[i+2+numSegment]=redistribute[i]/100.0;
+        }
+        for (int i = 0; i < vars.length; i++) {
+            s.setVariableValue(i, vars[i]);
+        }
+        problem.evaluate(s);
+        problem.revertToMaximization(s);
+        return s;
+    }
+    
+    @Test
+    public void testGenerateOriginalPaperSolution1(){
+        double[] collect = {20, 29, 26, 35, 27};
+        double[] redistribute = {20, 22, 19, 26, 13};
+        double catche = 44;
+        double fine = 61;
+        DoubleSolution s= this.createSolution(catche, fine, collect, redistribute);
+        String resp="For sol1, For variables: "+Arrays.toString(s.getVariables().toArray());
+        resp+=" we calculated Equality="+s.getObjective(0)+" and Fairness="+s.getObjective(1);
+        System.out.println(resp);
+    }
+    
+    @Test
+    public void testGenerateOriginalPaperSolution2(){
+        double[] collect = {1, 30, 37, 72, 66};
+        double[] redistribute = {2, 23, 42, 24, 9};
+        double catche = 45;
+        double fine = 56;
+        DoubleSolution s= this.createSolution(catche, fine, collect, redistribute);
+        String resp="For sol2, For variables: "+Arrays.toString(s.getVariables().toArray());
+        resp+=" we calculated Equality="+s.getObjective(0)+" and Fairness="+s.getObjective(1);
+        System.out.println(resp);
+    }
+    
+    @Test
+    public void testGenerateOriginalPaperSolution3(){
+        //double[] collect = {25.36, 25.25, 93.82, 89.18, 79.38};
+        double[] collect = {9.38, 4.43, 40.97, 66.65, 69.83};
+        //double[] redistribute = {89.18, 79.38, 79.37, 4.26, 4.31};
+        double[] redistribute = {66.65, 69.83, 67.57, 73.22, 66.62};
+        double catche = 99.98;
+        double fine = 0.0048;
+        fine=0.0693;
+        catche=99.98;
+        DoubleSolution s= this.createSolution(catche, fine, collect, redistribute);
+        String resp="For sol3, For variables: "+Arrays.toString(s.getVariables().toArray());
+        resp+=" we calculated Equality="+s.getObjective(0)+" and Fairness="+s.getObjective(1);
+        System.out.println(resp);
     }
 
 }

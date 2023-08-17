@@ -47,7 +47,7 @@ public class VariableAgent extends Agent {
         int collectingOrRedistribution = 0;
         if (this.preferedDecision == 3) {
             //collecting is the first element while redistribution is the second
-            collectingOrRedistribution = 1;
+            collectingOrRedistribution = 5;
         }
         //ignore the 2 first, take the prefered segment, take either collecting or redistribution
         int chosen = 2 + this.preferedSegment + collectingOrRedistribution;
