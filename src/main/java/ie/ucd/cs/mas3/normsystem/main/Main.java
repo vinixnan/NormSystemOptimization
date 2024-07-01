@@ -133,7 +133,7 @@ public class Main {
         /*--ENDGet results, Submit it to Monte Carlo Sampling and get Non-Dominated Solutions*/
         
         /* Reasoning Engine */
-        ReasoningGroup rg = new ReasoningGroup(numberOfReasoningAgents, problem.getNumberOfObjectives());
+        ReasoningGroup rg=new ReasoningGroup(numberOfReasoningAgents, numberOfReasoningAgents, problem.getNumberOfObjectives(), numSegments);
         DoubleSolution sol = rg.getBestSolution(archive);
         problem.revertToMaximization((DoubleSolution) sol);
         System.out.println(Arrays.toString(sol.getVariables().toArray()));
