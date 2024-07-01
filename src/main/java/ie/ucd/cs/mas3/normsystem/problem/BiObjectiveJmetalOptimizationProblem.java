@@ -61,8 +61,16 @@ public class BiObjectiveJmetalOptimizationProblem extends AbstractDoubleProblem 
         double[] redistributionRates = new double[this.numSegments];
         for (int i = 0; i < this.numSegments; i++) {
             collectingRates[i] = decisionVariables.get(i + 2);
-            redistributionRates[i] = decisionVariables.get(2  + i + this.numSegments);
+            redistributionRates[i] = decisionVariables.get(2 + i + this.numSegments);
         }
+        double totalRedistributionRates = StatUtils.sum(redistributionRates);
+        for (int i = 0; i < redistributionRates.length; i++) {
+            redistributionRates[i]=redistributionRates[i]/totalRedistributionRates;
+        }
+        for (int i = 0; i < this.numSegments; i++) {
+            decisionVariables.set(2 + i + this.numSegments, redistributionRates[i]);
+        }
+        
         Society sc = new Society(collectingRates, redistributionRates, numAgents, numEvaders, fineRate, investRate, catche);
         return sc;
     }
@@ -99,7 +107,7 @@ public class BiObjectiveJmetalOptimizationProblem extends AbstractDoubleProblem 
         s.setObjective(0, -1 * obj0mean);
         s.setObjective(1, -1 * obj1mean);
     }
-    
+
     public void evaluateUsingMonteCarloSampling(List<DoubleSolution> population){
         this.individualPath = this.path / population.size();
         System.out.println("Individual Path"+this.individualPath);
@@ -113,7 +121,7 @@ public class BiObjectiveJmetalOptimizationProblem extends AbstractDoubleProblem 
             s.setObjective(i,  -1 * s.getObjective(i));
         }
     }
-    
+
     public void revertToMaximization(List<DoubleSolution> population) {
         for (DoubleSolution s : population) {
             this.revertToMaximization(s);

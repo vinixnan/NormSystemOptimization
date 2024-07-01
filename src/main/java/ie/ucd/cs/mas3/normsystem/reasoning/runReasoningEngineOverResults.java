@@ -104,9 +104,9 @@ public class runReasoningEngineOverResults {
                 //oposite of int numOfDecisionVariables = 2 + numSegments * 2;
                 int numSegments = (numberOfVariablesInFile - 2) / 2;
                 if (nObj == 2) {
-                    p = new BiObjectiveJmetalOptimizationProblem(200, 10, numSegments, 0.5, 10, 5000);
+                    p = new BiObjectiveJmetalOptimizationProblem(200, 10, numSegments, 0.05, 10, 5000);
                 } else {
-                    p = new JmetalOptimizationProblem(200, 10, numSegments, 0.5, 10, 5000);
+                    p = new JmetalOptimizationProblem(200, 10, numSegments, 0.05, 10, 5000);
                 }
             }
             DoubleSolution s = generateSolution(p, variablesList.get(i).split(" "), objectivesList.get(i).split(" "), nObj);
